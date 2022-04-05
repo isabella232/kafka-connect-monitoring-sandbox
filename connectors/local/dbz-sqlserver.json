@@ -5,9 +5,10 @@
     "tasks.max" : "1",
     "database.server.name" : "server1",
     "database.hostname" : "sqlserver",
-    "database.port" : "1434",
+    "database.port" : "1433",
     "database.user" : "sa",
     "database.password" : "Password!",
-    "database.dbname" : "testDB"
+    "database.dbname" : "testDB",
+    "database.history.kafka.bootstrap.servers" : "kafka:9092"
     }
 }
