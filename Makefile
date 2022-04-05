@@ -104,10 +104,10 @@ ccloud-datagen-users:
 	curl -X PUT --data @connectors/ccloud/datagen-users.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-users/config | jq
 
 ccloud-inventory:
-	curl -X POST --data @connectors/ccloud/register-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors | jq
+	curl -X POST --data @connectors/local/register-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors | jq
 
 load-sqlserver:
-	cat sqlserver/inventory.sql | docker-compose exec -i sqlserver bash -c '/opt/mssql-tools/bin/sqlcmd -U sa -P Password!'
+	cat sqlserver/inventory.sql | docker exec -i sqlserver bash -c '/opt/mssql-tools/bin/sqlcmd -U sa -P Password!'
 
 ccloud-sqlserver:
 	curl -X PUT --data @connectors/ccloud/dbz-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors/dbz-sqlserver/config | jq
