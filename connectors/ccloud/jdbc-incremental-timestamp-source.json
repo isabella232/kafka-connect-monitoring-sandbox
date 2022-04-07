@@ -6,18 +6,10 @@
   "connection.password": "changeme",
   "table.whitelist": "orders",
   "mode": "timestamp+incrementing",
-<<<<<<< HEAD
-  "topic.prefix": "INCREMENTING_TIMESTAMP_",
-  "topic.creation.enable": "true",
-  "topic.creation.default.replication.factor": 3,
-  "topic.creation.default.partitions": 3,
-  "incrementing.column.name": "id",
-=======
   "topic.creation.enable": "true",
   "topic.creation.default.replication.factor": 3,
   "topic.creation.default.partitions": 3,
   "incrementing.column.name": "ID",
->>>>>>> Added connector files and updated Makefile
   "timestamp.column.name": "order_date",
   "validate.non.null": "false"
 
