@@ -61,6 +61,10 @@ local-remove-connector:
 logs-connect:
 	docker logs -f connect1
 
+local-sqlserver:
+	curl -X PUT --data @connectors/local/dbz-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors/local-dbz-sqlserver/config | jq
+
+# These connectors write to the ccloud cluster
 
 ccloud-exporter-api-key: ccloud-pre
 	ccloud api-key create --resource cloud
