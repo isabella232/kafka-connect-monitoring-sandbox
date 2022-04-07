@@ -1,0 +1,13 @@
+{
+  "name": "inventory-connector",
+  "config": {
+    "connector.class" : "io.debezium.connector.sqlserver.SqlServerConnector",
+    "tasks.max" : "1",
+    "database.server.name" : "server1",
+    "database.hostname" : "sqlserver",
+    "database.port" : "1434",
+    "database.user" : "sa",
+    "database.password" : "Password!",
+    "database.dbname" : "testDB"
+    }
+}

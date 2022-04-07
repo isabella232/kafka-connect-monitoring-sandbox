@@ -10,8 +10,9 @@ connector-download:
 	unzip confluentinc-kafka-connect-datagen-0.5.3.zip -d connector-plugins
 	rm confluentinc-kafka-connect-datagen-0.5.3.zip
 
-# These commands get set up your local CP cluster
 
+# Run these commands to set up your connect cluster and authentication credentials for Confluent Cloud
+include env
 up:
 	CCLOUD_CLUSTER=${CCLOUD_CLUSTER} \
 	CCLOUD_BOOTSTRAP_SERVERS=${CCLOUD_BOOTSTRAP_SERVERS} \
@@ -61,10 +62,6 @@ logs-connect:
 	docker logs -f connect1
 
 
-
-# Run these commands to set up your connect cluster and authentication credentials for Confluent Cloud
-include env
-
 ccloud-exporter-api-key: ccloud-pre
 	ccloud api-key create --resource cloud
 
@@ -106,9 +103,27 @@ ccloud-topic: ccloud-pre
 ccloud-datagen-users:
 	curl -X PUT --data @connectors/ccloud/datagen-users.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-users/config | jq
 
+ccloud-inventory:
+	curl -X POST --data @connectors/ccloud/register-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors | jq
+
+load-sqlserver:
+	cat sqlserver/inventory.sql | docker-compose exec -i sqlserver bash -c '/opt/mssql-tools/bin/sqlcmd -U sa -P Password!'
+
+ccloud-sqlserver:
+	curl -X PUT --data @connectors/ccloud/dbz-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors/dbz-sqlserver/config | jq
+
 ccloud-datagen-users-schema:
 	curl -X PUT --data @connectors/ccloud/datagen-users-schema.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-users-schema/config | jq
 
+<<<<<<< HEAD
+=======
+ccloud-jdbc-mysql:
+	curl -X PUT --data @connectors/ccloud/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql/config | jq
+
+ccloud-jdbc-mysql-custom-query:
+	curl -X PUT --data @connectors/ccloud/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql-custom-query/config | jq
+
+>>>>>>> Added connector files and updated Makefile
 ccloud-jdbc-bulk-mode-source:
 	curl -X PUT --data @connectors/ccloud/jdbc-bulk-mode-source.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-bulk-mode-source/config | jq
 

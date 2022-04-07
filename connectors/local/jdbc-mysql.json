@@ -4,10 +4,11 @@
         "connection.url": "jdbc:mysql://mysql:3306/db?allowPublicKeyRetrieval=true&useSSL=false",
         "connection.user": "user",
         "connection.password": "changeme",
-        "table.whitelist": "customers",
+        "table.whitelist": "customers,orders",
         "topic.prefix": "mysql-",
         "mode": "bulk",
         "topic.creation.groups": "mysql*",
+        "topic.creation.enable": "true",
         "topic.creation.default.replication.factor": 3,
         "topic.creation.default.partitions": 3
 }
