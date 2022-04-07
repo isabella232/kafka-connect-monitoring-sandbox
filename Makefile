@@ -38,25 +38,25 @@ local-topic:
 # The following commands are for connectors that are RW to the local CP cluster
 
 local-datagen-commercials:
-	curl -X PUT --data @connectors/local/datagen-commercials.json -H "Content-type: application/json" http://localhost:8084/connectors/datagen-commercials/config | jq
+	curl -X PUT --data @connectors/local/datagen-commercials.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-commercials/config | jq
 
 local-datagen-inventory:
-	curl -X PUT --data @connectors/local/datagen.json -H "Content-type: application/json" http://localhost:8084/connectors/datagen-inventory/config | jq
+	curl -X PUT --data @connectors/local/datagen.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-inventory/config | jq
 
 local-jdbc-mysql:
-	curl -X PUT --data @connectors/local/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8084/connectors/jdbc-mysql/config | jq
+	curl -X PUT --data @connectors/local/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql/config | jq
 
 local-jdbc-mysql-custom-query:
-	curl -X PUT --data @connectors/local/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8084/connectors/jdbc-mysql-custom-query/config | jq
+	curl -X PUT --data @connectors/local/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql-custom-query/config | jq
 
 local-jdbc-sink:
-	curl -X PUT --data @connectors/ccloud/jdbc-sink-schema.json -H "Content-type: application/json" http://localhost:8084/connectors/jdbc-sink-schema/config | jq
+	curl -X PUT --data @connectors/ccloud/jdbc-sink-schema.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-sink-schema/config | jq
 
 local-get-connectors:
-	curl http://localhost:8084/connectors/ | jq
+	curl http://localhost:8083/connectors/ | jq
 
 local-remove-connector:
-	curl -X DELETE http://localhost:8084/connectors/| jq
+	curl -X DELETE http://localhost:8083/connectors/| jq
 
 logs-connect:
 	docker logs -f connect1
@@ -115,15 +115,6 @@ ccloud-sqlserver:
 ccloud-datagen-users-schema:
 	curl -X PUT --data @connectors/ccloud/datagen-users-schema.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-users-schema/config | jq
 
-<<<<<<< HEAD
-=======
-ccloud-jdbc-mysql:
-	curl -X PUT --data @connectors/ccloud/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql/config | jq
-
-ccloud-jdbc-mysql-custom-query:
-	curl -X PUT --data @connectors/ccloud/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql-custom-query/config | jq
-
->>>>>>> Added connector files and updated Makefile
 ccloud-jdbc-bulk-mode-source:
 	curl -X PUT --data @connectors/ccloud/jdbc-bulk-mode-source.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-bulk-mode-source/config | jq
 

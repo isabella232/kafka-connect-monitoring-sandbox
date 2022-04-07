@@ -7,8 +7,8 @@
     "topic.prefix": "customer-orders",
     "connection.password": "changeme",
     "mode": "bulk",
-    "topic.creation.groups": "mysql*",
+    "topic.prefix": "customer_names",
     "topic.creation.default.replication.factor": 3,
     "topic.creation.default.partitions": 3,
-    "query": "SELECT id, first_name from customers;"
+    "query": "select id, first_name from customers;"
 }
