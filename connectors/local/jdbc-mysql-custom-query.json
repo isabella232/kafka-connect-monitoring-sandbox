@@ -11,4 +11,3 @@
     "topic.creation.default.partitions": 3,
     "query": "select id, first_name from customers;"
 }
-
