@@ -142,6 +142,31 @@ make ccloud-jdbc-mysql
 make ccloud-jdbc-mysql-custom-query
 ```
 
+I. Deploy SQLServer Debezium Connectors:
+
+First, create the following topics with 1 partition in your confluent cloud cluster.
+
+- `server1.dbo.orders`
+
+- `server1.dbo.customers`
+
+- `server1.dbo.products`
+
+- `server1.dbo.products_on_hand`
+
+Then load the sql tables into the sqlserver database.
+
+```shell script
+make load-sqlserver
+```
+
+Next start the debezium SQLServer connector
+
+```shell script
+make ccloud-sqlserver
+```
+
+
 Insert your `CCLOUD_SR_URL`, `CCLOUD_SR_API_KEY` and `CCLOUD_SR_API_SECRET` values in the `jdbc-sink-schema.json` file.
 ```shell script
 make ccloud-jdbc-sink-schema
@@ -189,12 +214,14 @@ make local-jdbc-sink
 
 You can view the connector metrics and Kafka broker metrics on Grafana
 
-Visit http://localhost:3000/
+Visit <http://localhost:3000/>
 
 * Username: `admin`
 * Password: `admin`
 
-Go to the Kafka Connect dashboard to see the connector metrics
+Click on the dashboards icon on the left side panel and select the `Kafka Connect V2`
+dashboard.
+
 
 ![grafana](./docs/img/kafka-connect-cluster.png)
 

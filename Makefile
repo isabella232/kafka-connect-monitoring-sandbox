@@ -10,8 +10,9 @@ connector-download:
 	unzip confluentinc-kafka-connect-datagen-0.5.3.zip -d connector-plugins
 	rm confluentinc-kafka-connect-datagen-0.5.3.zip
 
-# These commands get set up your local CP cluster
 
+# Run these commands to set up your connect cluster and authentication credentials for Confluent Cloud
+include env
 up:
 	CCLOUD_CLUSTER=${CCLOUD_CLUSTER} \
 	CCLOUD_BOOTSTRAP_SERVERS=${CCLOUD_BOOTSTRAP_SERVERS} \
@@ -31,39 +32,39 @@ down:
 local-topology:
 	docker-compose exec julie-ops kafka-topology-builder.sh --brokers kafka1:19092 --clientConfig /topologies/local.properties --topology /topologies/local.yml
 
-local-topic:
-	kafka-topics --create --topic test1 --bootstrap-server kafka1:9092
+make local-topic:
+	kafka-topics --create --topic test1 --bootstrap-server kafka1:19092
 
 # The following commands are for connectors that are RW to the local CP cluster
 
 local-datagen-commercials:
-	curl -X PUT --data @connectors/local/datagen-commercials.json -H "Content-type: application/json" http://localhost:8084/connectors/datagen-commercials/config | jq
+	curl -X PUT --data @connectors/local/datagen-commercials.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-commercials/config | jq
 
 local-datagen-inventory:
-	curl -X PUT --data @connectors/local/datagen.json -H "Content-type: application/json" http://localhost:8084/connectors/datagen-inventory/config | jq
+	curl -X PUT --data @connectors/local/datagen.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-inventory/config | jq
 
 local-jdbc-mysql:
-	curl -X PUT --data @connectors/local/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8084/connectors/jdbc-mysql/config | jq
+	curl -X PUT --data @connectors/local/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql/config | jq
 
 local-jdbc-mysql-custom-query:
-	curl -X PUT --data @connectors/local/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8084/connectors/jdbc-mysql-custom-query/config | jq
+	curl -X PUT --data @connectors/local/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql-custom-query/config | jq
 
 local-jdbc-sink:
-	curl -X PUT --data @connectors/ccloud/jdbc-sink-schema.json -H "Content-type: application/json" http://localhost:8084/connectors/jdbc-sink-schema/config | jq
+	curl -X PUT --data @connectors/ccloud/jdbc-sink-schema.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-sink-schema/config | jq
 
 local-get-connectors:
-	curl http://localhost:8084/connectors/ | jq
+	curl http://localhost:8083/connectors/ | jq
 
 local-remove-connector:
-	curl -X DELETE http://localhost:8084/connectors/| jq
+	curl -X DELETE http://localhost:8083/connectors/| jq
 
 logs-connect:
 	docker logs -f connect1
 
+local-sqlserver:
+	curl -X PUT --data @connectors/local/dbz-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors/local-dbz-sqlserver/config | jq
 
-
-# Run these commands to set up your connect cluster and authentication credentials for Confluent Cloud
-include env
+# These connectors write to the ccloud cluster
 
 ccloud-exporter-api-key: ccloud-pre
 	ccloud api-key create --resource cloud
@@ -106,8 +107,23 @@ ccloud-topic: ccloud-pre
 ccloud-datagen-users:
 	curl -X PUT --data @connectors/ccloud/datagen-users.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-users/config | jq
 
+ccloud-inventory:
+	curl -X POST --data @connectors/local/register-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors | jq
+
+load-sqlserver:
+	cat sqlserver/inventory.sql | docker exec -i sqlserver bash -c '/opt/mssql-tools/bin/sqlcmd -U sa -P Password!'
+
+ccloud-sqlserver:
+	curl -X PUT --data @connectors/ccloud/dbz-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors/dbz-sqlserver/config | jq
+
 ccloud-datagen-users-schema:
 	curl -X PUT --data @connectors/ccloud/datagen-users-schema.json -H "Content-type: application/json" http://localhost:8083/connectors/datagen-users-schema/config | jq
+
+ccloud-jdbc-mysql:
+	curl -X PUT --data @connectors/ccloud/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql/config | jq
+
+ccloud-jdbc-mysql-custom-query:
+	curl -X PUT --data @connectors/ccloud/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql-custom-query/config | jq
 
 ccloud-jdbc-bulk-mode-source:
 	curl -X PUT --data @connectors/ccloud/jdbc-bulk-mode-source.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-bulk-mode-source/config | jq
@@ -121,17 +137,8 @@ ccloud-jdbc-timestamp-mode-source:
 ccloud-jdbc-incremental-timestamp-source:
 	curl -X PUT --data @connectors/ccloud/jdbc-incremental-timestamp-source.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-incremental-timestamp-source/config | jq
 
-ccloud-jdbc-mysql:
-	curl -X PUT --data @connectors/ccloud/jdbc-mysql.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql/config | jq
-
-ccloud-jdbc-mysql-custom-query:
-	curl -X PUT --data @connectors/ccloud/jdbc-mysql-custom-query.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-mysql-custom-query/config | jq
-
 ccloud-jdbc-sink:
-	curl -X PUT --data @connectors/ccloud/jdbc-sink-schema.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-sink-schema/config | jq
-
-ccloud-dbz:
-	curl -X PUT --data @connectors/ccloud/dbz-sqlserver.json -H "Content-type: application/json" http://localhost:8083/connectors/dbz-sqlserver/config | jq
+	curl -X PUT --data @connectors/ccloud/jdbc-sink.json -H "Content-type: application/json" http://localhost:8083/connectors/jdbc-sink/config | jq
 
 ccloud-get-connectors:
 	curl http://localhost:8083/connectors/ | jq
